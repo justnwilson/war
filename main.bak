@@ -1,0 +1,160 @@
+--[[ 
+--loads image into the texture variable
+texture = love.graphics.newImage("cards.png")
+    
+--define card coordinates using newQuad function
+--hearts
+aceHeart = love.graphics.newQuad(0,0,63,77, texture)
+oneHeart = love.graphics.newQuad(0,0,0,0, texture)
+twoHeart = love.graphics.newQuad(0,0,0,0, texture)
+threeHeart = love.graphics.newQuad(0,0,0,0, texture)
+fourHeart = love.graphics.newQuad(0,0,0,0, texture)
+fiveHeart = love.graphics.newQuad(0,0,0,0, texture)
+sixHeart = love.graphics.newQuad(0,0,0,0, texture)
+sevenHeart = love.graphics.newQuad(0,0,0,0, texture)
+eightHeart = love.graphics.newQuad(0,0,0,0, texture)
+nineHeart = love.graphics.newQuad(0,0,0,0, texture)
+tenHeart = love.graphics.newQuad(0,0,0,0, texture)
+jackHeart = love.graphics.newQuad(0,0,0,0, texture)
+queenHeart = love.graphics.newQuad(0,0,0,0, texture)
+kingHeart = love.graphics.newQuad(0,0,0,0, texture)
+--diamonds
+aceDiamond = love.graphics.newQuad(0,0,0,0, texture)
+oneDiamond = love.graphics.newQuad(0,0,0,0, texture)
+twoDiamond = love.graphics.newQuad(0,0,0,0, texture)
+threeDiamond = love.graphics.newQuad(0,0,0,0, texture)
+fourDiamond = love.graphics.newQuad(0,0,0,0, texture)
+fiveDiamond = love.graphics.newQuad(0,0,0,0, texture)
+sixDiamond = love.graphics.newQuad(0,0,0,0, texture)
+sevenDiamond = love.graphics.newQuad(0,0,0,0, texture)
+eightDiamond = love.graphics.newQuad(0,0,0,0, texture)
+nineDiamond = love.graphics.newQuad(0,0,0,0, texture)
+tenDiamond = love.graphics.newQuad(0,0,0,0, texture)
+jackDiamond = love.graphics.newQuad(0,0,0,0, texture)
+queenDiamond = love.graphics.newQuad(0,0,0,0, texture)
+kingDiamond = love.graphics.newQuad(0,0,0,0, texture)
+--spades
+aceSpade = love.graphics.newQuad(0,0,0,0, texture)
+oneSpade = love.graphics.newQuad(0,0,0,0, texture)
+twoSpade = love.graphics.newQuad(0,0,0,0, texture)
+threeSpade = love.graphics.newQuad(0,0,0,0, texture)
+fourSpade = love.graphics.newQuad(0,0,0,0, texture)
+fiveSpade = love.graphics.newQuad(0,0,0,0, texture)
+sixSpade = love.graphics.newQuad(0,0,0,0, texture)
+sevenSpade = love.graphics.newQuad(0,0,0,0, texture)
+eightSpade = love.graphics.newQuad(0,0,0,0, texture)
+nineSpade = love.graphics.newQuad(0,0,0,0, texture)
+tenSpade = love.graphics.newQuad(0,0,0,0, texture)
+jackSpade = love.graphics.newQuad(0,0,0,0, texture)
+queenSpade = love.graphics.newQuad(0,0,0,0, texture)
+kingSpade = love.graphics.newQuad(0,0,0,0, texture)
+--clubs
+aceClub = love.graphics.newQuad(0,0,0,0, texture)
+oneClub = love.graphics.newQuad(0,0,0,0, texture)
+twoClub = love.graphics.newQuad(0,0,0,0, texture)
+threeClub = love.graphics.newQuad(0,0,0,0, texture)
+fourClub = love.graphics.newQuad(0,0,0,0, texture)
+fiveClub = love.graphics.newQuad(0,0,0,0, texture)
+sixClub = love.graphics.newQuad(0,0,0,0, texture)
+sevenClub = love.graphics.newQuad(0,0,0,0, texture)
+eightClub = love.graphics.newQuad(0,0,0,0, texture)
+nineClub = love.graphics.newQuad(0,0,0,0, texture)
+tenClub = love.graphics.newQuad(0,0,0,0, texture)
+jackClub = love.graphics.newQuad(0,0,0,0, texture)
+queenClub = love.graphics.newQuad(0,0,0,0, texture)
+kingClub = love.graphics.newQuad(0,0,0,0, texture)
+ ]]
+
+--[[ --used later
+local card, pos
+ ]]
+
+
+deck = {'aceHeart', 'twoHeart', 'threeHeart'}
+p1hand = {}
+p2hand = {}
+
+print(deck[1])
+
+function deal()
+    for i,v in ipairs(deck) do
+        if i % 2 == 0 then
+            p1hand = {unpack(deck)}
+            print("Player1 is dealt one card")
+        else
+            p2hand = {unpack(deck)}
+            print("Player2 is dealt one card")
+        end
+    end
+end
+
+deal()
+print (p1hand[1])
+print (p2hand[1])     
+
+
+--[[ --war logic
+function war()
+	player1Hand[0] goes face down
+
+
+--play card
+function playCard()
+	if player1Card > player2Card then
+		player1Hand = player1Hand + player2Card --add p2 card to p1 hand
+	elseif player2Card > player1Card then
+		player2Hand = player2Hand + player2Card
+	elseif player1Card == player2Card do
+		war()
+
+
+function love.update(dt)
+    --
+end
+    
+--draws graphics on screen
+function love.draw()
+    love.graphics.draw(texture, aceHeart, 0, 0)
+    
+end
+ ]]
+
+--stuff to build
+-- deck
+-- two players -> each player's hand -> table
+-- take turns putting cards in the middle to compare -> if statements
+-- shuffle cards -> add some random
+
+
+
+--[[
+Tim's Notes: 
+1. write down the rules of war as concrete items -- e.g. "a high card beats a lower card | Aces are the highest card (not lowest) | if two cards are the same face value, Spades beats Hearts beats clubs beats diamonds | players have a hand of 12 | loser gets the other person's card" etc
+
+that helps you understand the exact logic you are shooting for, kind of like user stories in web
+
+good to do this first so you are thinking architecturally from jump
+
+2. figure out the minimum you need to display this on screen -- imo, be able to render two specific cards, and some text. this is the first code you will write, and you shoot for something concrete, like literally be able to just display two cards and "hello, world!" on the screen
+
+3. figure out your "loop." this is core to game programming more than any other kind of programming. game programming is a constant loop of user input, then effect. in this case the one user action is basically "draw". so you would have some input e.g. spacebar trigger the draw event, then:
+
+4. do your setup: draw two "hands" from a single "deck" (this will involve one "deck" array you set up manually, and two "hand" arrays for each player, a RNG, and a loop or two)
+
+5. by doing so define your "game state" (in Lua, will be a "global" table that you declare at the top and set up in the .load method)
+
+6. implement your player action "draw" where a card is drawn from the top (front or back aka) of each hand array, displayed, and compared
+
+7. show the result (text or whatever, "you won" or "you lost" in terms of info)
+
+8. mutate state (add both cards to "bottom" of loser's deck or however you want your rule to work)
+
+9. close the loop, aka go to #6
+
+10. finally handle endgame; display a message when someone wins, and optionally give the player an option to restart the game
+
+i personally find it is cleanest and easiest to fully complete each step sequentially, with a minimum of UI. then when you are happy with the feel of the loop itself you can go in and polish everything, add animation or whatever you want.
+
+    my one additional hint to you is regarding your card loader -- you are on the right track. however this might be a good place to a) measure the actual size of each card on the PNG, and b) think about using a loop
+
+ ]]
