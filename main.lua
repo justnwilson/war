@@ -8,7 +8,6 @@ local gameState = {
     shuffled = {},
     player_plays = {},
     npc_plays = {},
-    player_test = {{value = "14", suit = "Spades", spriteIndex = 39}},
     war_cards = {}, --face-down cards during war
     war_face = {}, --face-up cars during war
     deck = {
@@ -269,45 +268,3 @@ function love.draw()
         love.graphics.draw(deckfile, quads[77], 300, 50)
     end
 end
-
-    --draw the war_cards (face-down cards)
-    --draw the war_face (face-up cards)
---[[     if #gameState.war_face > 0 then
-        for i, card in ipairs(gameState.war_cards) do
-            love.graphics.draw(deckfile, quads[card[1].spriteIndex], 200, 250 + i * 20)
-        end
-    end ]]
-
-
-
---[[
-Tim's Notes: 
-1. write down the rules of war as concrete items -- e.g. "a high card beats a lower card | Aces are the highest card (not lowest) | if two cards are the same face value, Spades beats Hearts beats clubs beats diamonds | players have a hand of 12 | loser gets the other person's card" etc
-
-that helps you understand the exact logic you are shooting for, kind of like user stories in web
-
-good to do this first so you are thinking architecturally from jump
-
-2. figure out the minimum you need to display this on screen -- imo, be able to render two specific cards, and some text. this is the first code you will write, and you shoot for something concrete, like literally be able to just display two cards and "hello, world!" on the screen
-
-3. figure out your "loop." this is core to game programming more than any other kind of programming. game programming is a constant loop of user input, then effect. in this case the one user action is basically "draw". so you would have some input e.g. spacebar trigger the draw event, then:
-
-4. do your setup: draw two "hands" from a single "deck" (this will involve one "deck" array you set up manually, and two "hand" arrays for each player, a RNG, and a loop or two)
-
-5. by doing so define your "game state" (in Lua, will be a "global" table that you declare at the top and set up in the .load method)
-
-6. implement your player action "draw" where a card is drawn from the top (front or back aka) of each hand array, displayed, and compared
-
-7. show the result (text or whatever, "you won" or "you lost" in terms of info)
-
-8. mutate state (add both cards to "bottom" of loser's deck or however you want your rule to work)
-
-9. close the loop, aka go to #6
-
-10. finally handle endgame; display a message when someone wins, and optionally give the player an option to restart the game
-
-i personally find it is cleanest and easiest to fully complete each step sequentially, with a minimum of UI. then when you are happy with the feel of the loop itself you can go in and polish everything, add animation or whatever you want.
-
-    my one additional hint to you is regarding your card loader -- you are on the right track. however this might be a good place to a) measure the actual size of each card on the PNG, and b) think about using a loop
-
- ]]
