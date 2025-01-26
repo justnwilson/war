@@ -1,103 +1,313 @@
+-- so space can only be pressed one at a time
+local spacePressed = false
 
---loads image into the texture variable
-texture = love.graphics.newImage("cards.png")
-    
---define card coordinates using newQuad function
---hearts
-aceHeart = love.graphics.newQuad(0,0,63,77, texture)
-oneHeart = love.graphics.newQuad(0,0,0,0, texture)
-twoHeart = love.graphics.newQuad(0,0,0,0, texture)
-threeHeart = love.graphics.newQuad(0,0,0,0, texture)
-fourHeart = love.graphics.newQuad(0,0,0,0, texture)
-fiveHeart = love.graphics.newQuad(0,0,0,0, texture)
-sixHeart = love.graphics.newQuad(0,0,0,0, texture)
-sevenHeart = love.graphics.newQuad(0,0,0,0, texture)
-eightHeart = love.graphics.newQuad(0,0,0,0, texture)
-nineHeart = love.graphics.newQuad(0,0,0,0, texture)
-tenHeart = love.graphics.newQuad(0,0,0,0, texture)
-jackHeart = love.graphics.newQuad(0,0,0,0, texture)
-queenHeart = love.graphics.newQuad(0,0,0,0, texture)
-kingHeart = love.graphics.newQuad(0,0,0,0, texture)
---diamonds
-aceDiamond = love.graphics.newQuad(0,0,0,0, texture)
-oneDiamond = love.graphics.newQuad(0,0,0,0, texture)
-twoDiamond = love.graphics.newQuad(0,0,0,0, texture)
-threeDiamond = love.graphics.newQuad(0,0,0,0, texture)
-fourDiamond = love.graphics.newQuad(0,0,0,0, texture)
-fiveDiamond = love.graphics.newQuad(0,0,0,0, texture)
-sixDiamond = love.graphics.newQuad(0,0,0,0, texture)
-sevenDiamond = love.graphics.newQuad(0,0,0,0, texture)
-eightDiamond = love.graphics.newQuad(0,0,0,0, texture)
-nineDiamond = love.graphics.newQuad(0,0,0,0, texture)
-tenDiamond = love.graphics.newQuad(0,0,0,0, texture)
-jackDiamond = love.graphics.newQuad(0,0,0,0, texture)
-queenDiamond = love.graphics.newQuad(0,0,0,0, texture)
-kingDiamond = love.graphics.newQuad(0,0,0,0, texture)
---spades
-aceSpade = love.graphics.newQuad(0,0,0,0, texture)
-oneSpade = love.graphics.newQuad(0,0,0,0, texture)
-twoSpade = love.graphics.newQuad(0,0,0,0, texture)
-threeSpade = love.graphics.newQuad(0,0,0,0, texture)
-fourSpade = love.graphics.newQuad(0,0,0,0, texture)
-fiveSpade = love.graphics.newQuad(0,0,0,0, texture)
-sixSpade = love.graphics.newQuad(0,0,0,0, texture)
-sevenSpade = love.graphics.newQuad(0,0,0,0, texture)
-eightSpade = love.graphics.newQuad(0,0,0,0, texture)
-nineSpade = love.graphics.newQuad(0,0,0,0, texture)
-tenSpade = love.graphics.newQuad(0,0,0,0, texture)
-jackSpade = love.graphics.newQuad(0,0,0,0, texture)
-queenSpade = love.graphics.newQuad(0,0,0,0, texture)
-kingSpade = love.graphics.newQuad(0,0,0,0, texture)
---clubs
-aceClub = love.graphics.newQuad(0,0,0,0, texture)
-oneClub = love.graphics.newQuad(0,0,0,0, texture)
-twoClub = love.graphics.newQuad(0,0,0,0, texture)
-threeClub = love.graphics.newQuad(0,0,0,0, texture)
-fourClub = love.graphics.newQuad(0,0,0,0, texture)
-fiveClub = love.graphics.newQuad(0,0,0,0, texture)
-sixClub = love.graphics.newQuad(0,0,0,0, texture)
-sevenClub = love.graphics.newQuad(0,0,0,0, texture)
-eightClub = love.graphics.newQuad(0,0,0,0, texture)
-nineClub = love.graphics.newQuad(0,0,0,0, texture)
-tenClub = love.graphics.newQuad(0,0,0,0, texture)
-jackClub = love.graphics.newQuad(0,0,0,0, texture)
-queenClub = love.graphics.newQuad(0,0,0,0, texture)
-kingClub = love.graphics.newQuad(0,0,0,0, texture)
+local gameState = {
+    player_hand = {},
+    npc_hand = {},
+    player_card = {},
+    shuffled = {},
+    player_plays = {},
+    npc_plays = {},
+    player_test = {{value = "14", suit = "Spades", spriteIndex = 39}},
+    war_cards = {}, --face-down cards during war
+    war_face = {}, --face-up cars during war
+    deck = {
+        {value = "14", suit = "Spades", spriteIndex = 39},  -- Ace of Spades
+        {value = "14", suit = "Hearts", spriteIndex = 1},  -- Ace of Hearts
+        {value = "14", suit = "Diamonds", spriteIndex = 20}, -- Ace of Diamonds
+        {value = "14", suit = "Clubs", spriteIndex = 58},   -- Ace of Clubs
+        {value = "13", suit = "Spades", spriteIndex = 51},   -- King of Spades
+        {value = "13", suit = "Hearts", spriteIndex = 13},   -- King of Hearts
+        {value = "13", suit = "Diamonds", spriteIndex = 32}, -- King of Diamonds
+        {value = "13", suit = "Clubs", spriteIndex = 70},   -- King of Clubs
+        {value = "12", suit = "Spades", spriteIndex = 50},   -- Queen of Spades
+        {value = "12", suit = "Hearts", spriteIndex = 12},  -- Queen of Hearts
+        {value = "12", suit = "Diamonds", spriteIndex = 31}, -- Queen of Diamonds
+        {value = "12", suit = "Clubs", spriteIndex = 69},  -- Queen of Clubs
+        {value = "11", suit = "Spades", spriteIndex = 49},  -- Jack of Spades
+        {value = "11", suit = "Hearts", spriteIndex = 11},  -- Jack of Hearts
+        {value = "11", suit = "Diamonds", spriteIndex = 30}, -- Jack of Diamonds
+        {value = "11", suit = "Clubs", spriteIndex = 68},  -- Jack of Clubs
+        {value = "10", suit = "Spades", spriteIndex = 48}, -- 10 of Spades
+        {value = "10", suit = "Hearts", spriteIndex = 10}, -- 10 of Hearts
+        {value = "10", suit = "Diamonds", spriteIndex = 29}, -- 10 of Diamonds
+        {value = "10", suit = "Clubs", spriteIndex = 67},  -- 10 of Clubs
+        {value = "9", suit = "Spades", spriteIndex = 47},  -- 9 of Spades
+        {value = "9", suit = "Hearts", spriteIndex = 9},  -- 9 of Hearts
+        {value = "9", suit = "Diamonds", spriteIndex = 28}, -- 9 of Diamonds
+        {value = "9", suit = "Clubs", spriteIndex = 66},  -- 9 of Clubs
+        {value = "8", suit = "Spades", spriteIndex = 46},  -- 8 of Spades
+        {value = "8", suit = "Hearts", spriteIndex = 8},  -- 8 of Hearts
+        {value = "8", suit = "Diamonds", spriteIndex = 27}, -- 8 of Diamonds
+        {value = "8", suit = "Clubs", spriteIndex = 65},  -- 8 of Clubs
+        {value = "7", suit = "Spades", spriteIndex = 45},  -- 7 of Spades
+        {value = "7", suit = "Hearts", spriteIndex = 7},  -- 7 of Hearts
+        {value = "7", suit = "Diamonds", spriteIndex = 26}, -- 7 of Diamonds
+        {value = "7", suit = "Clubs", spriteIndex = 64},  -- 7 of Clubs
+        {value = "6", suit = "Spades", spriteIndex = 44},  -- 6 of Spades
+        {value = "6", suit = "Hearts", spriteIndex = 6},  -- 6 of Hearts
+        {value = "6", suit = "Diamonds", spriteIndex = 25}, -- 6 of Diamonds
+        {value = "6", suit = "Clubs", spriteIndex = 63},  -- 6 of Clubs
+        {value = "5", suit = "Spades", spriteIndex = 43},  -- 5 of Spades
+        {value = "5", suit = "Hearts", spriteIndex = 5},  -- 5 of Hearts
+        {value = "5", suit = "Diamonds", spriteIndex = 24}, -- 5 of Diamonds
+        {value = "5", suit = "Clubs", spriteIndex = 62},  -- 5 of Clubs
+        {value = "4", suit = "Spades", spriteIndex = 42},  -- 4 of Spades
+        {value = "4", suit = "Hearts", spriteIndex = 4},  -- 4 of Hearts
+        {value = "4", suit = "Diamonds", spriteIndex = 23}, -- 4 of Diamonds
+        {value = "4", suit = "Clubs", spriteIndex = 61},  -- 4 of Clubs
+        {value = "3", suit = "Spades", spriteIndex = 41},  -- 3 of Spades
+        {value = "3", suit = "Hearts", spriteIndex = 3},  -- 3 of Hearts
+        {value = "3", suit = "Diamonds", spriteIndex = 22}, -- 3 of Diamonds
+        {value = "3", suit = "Clubs", spriteIndex = 60},  -- 3 of Clubs
+        {value = "2", suit = "Spades", spriteIndex = 40},  -- 2 of Spades
+        {value = "2", suit = "Hearts", spriteIndex = 2},  -- 2 of Hearts
+        {value = "2", suit = "Diamonds", spriteIndex = 21}, -- 2 of Diamonds
+        {value = "2", suit = "Clubs", spriteIndex = 59}   -- 2 of Clubs
+    }
+}
 
---used later
-local card, pos
+--is space key down?
+function love.keypressed(key)
+    if key == "space" then
+        spacePressed = true
+    end
+end
+--is space key up?
+function love.keyreleased(key)
+    if key == "space" then
+        spacePressed = false
+    end
+end
+
+function love.load()
+    --seed the randomizer (ie. shuffledeck())
+    math.randomseed(os.time())
+
+    --TODO: move this out of love.load so that it can run more than once per app launch
+    shuffleDeck()
+    deal()
+
+    --loads the file (i.e. image)
+    deckfile = love.graphics.newImage("art/cards.png")
+
+    SPRITE_WIDTH, SPRITE_HEIGHT = 944, 385
+    QUAD_WIDTH, QUAD_HEIGHT = 48, 64
+    quads = {} -- table for storing sprites
+
+    --number of cards in a row
+    --math.floor is used to return an integer
+    cards_in_row = math.floor(SPRITE_WIDTH / QUAD_WIDTH)
+
+    --loop to define quads
+    for i = 1, 114 do --there's 114 quads in the image
+
+        --horizontal position of a sprite
+        local x = ((i - 1) % cards_in_row) * QUAD_WIDTH
+        --now we derive the vertical position of a sprite
+        --((i - 1) / cards_in_row) calculates how many rows have passed, returns integer
+        local y = math.floor((i - 1) / cards_in_row) * QUAD_HEIGHT
+        --the graphic of a particular card[i] is calculated using the x and y variables
+        quads[i] = love.graphics.newQuad(x, y, QUAD_WIDTH, QUAD_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT)
+    end
+end
+
+--shuffle the deck
+function shuffleDeck()
+    for i, card in ipairs(gameState.deck) do
+        --this creates a random position between 1 and the shuffled table max
+        local pos = math.random(1, #gameState.shuffled +1) -- +1 is needed for the first iteration so that the second position is >= the first position
+        --add the cards to the `shuffled` table at position `pos`
+        table.insert(gameState.shuffled, pos, card)
+    end
+end
 
 
+--deal out the cards
+function deal()        
+    for i, card in ipairs(gameState.shuffled) do
+        if i % 2 == 0 then
+            table.insert(gameState.player_hand, card)
+        else
+            table.insert(gameState.npc_hand, card)
+        end
+    end
+end
 
---war logic
+
+function enoughCardsForWar()
+    --ensure each player has enough cards for a war match
+    if #gameState.player_hand < 4 then
+        print("You don't have enough cards! You have lost.")
+        return false
+    elseif #gameState.npc_hand < 4 then
+        print("The enemy is out of cards! You win!")
+        return false
+    end
+    return true
+end
+
+
 function war()
-	player1Hand[0] goes face down
+    --each player needs at least 4 cards, or they lose
+    if not enoughCardsForWar(gameState.player_hand, gameState.npc_hand) then
+        return
+    end
 
+    inWar = true
+    --take three cards from each player and place them in the war_cards table
+    for i = 1, 3 do
+        table.insert(gameState.war_cards, table.remove(gameState.player_hand, 1))
+        table.insert(gameState.war_cards, table.remove(gameState.npc_hand, 1))
+    end
 
---play card
-function playCard()
-	if player1Card > player2Card then
-		player1Hand = player1Hand + player2Card --add p2 card to p1 hand
-	elseif player2Card > player1Card then
-		player2Hand = player2Hand + player2Card
-	elseif player1Card == player2Card do
-		war()
+    --compare the fourth card
+    local player_card = table.remove(gameState.player_hand, 1)
+    local npc_card = table.remove(gameState.npc_hand, 1)
+    table.insert(gameState.war_cards, player_card)
+    table.insert(gameState.war_cards, npc_card)
+
+    if player_card.value > npc_card.value then
+        print("You win the war!")
+        --puts down-facing cards (war_cards) in players_hand
+        for _, card in ipairs(gameState.war_cards) do
+            table.insert(gameState.player_hand, card)
+        end
+            --puts up-facing cards in the player_hand
+        for _, card in ipairs(gameState.war_face) do
+            table.insert(gameState.player_hand, card)
+        end
+    
+    elseif npc_card.value > player_card.value then
+        print("You have lost the war!")
+        for _, card in ipairs(gameState.war_cards) do
+            table.insert(gameState.npc_hand, card)
+        end
+        for _, card in ipairs(gameState.war_face) do
+            table.insert(gameState.npc_hand, card)
+        end
+    
+    else
+        print("It's a tie. Time for war!!!")
+        war(gameState.player_hand, gameState.npc_hand)
+    end
+
+    --clear war tables
+    gameState.war_cards = {}
+    gameState.war_face = {}
+end
 
 
 function love.update(dt)
-    --
+    if spacePressed then
+        spacePressed = false
+        --pull top card from each player to compare
+        gameState.player_plays = { table.remove(gameState.player_hand, 1) }
+        gameState.npc_plays = { table.remove(gameState.npc_hand, 1) }
+
+        --check if the players have enough cards
+        if not gameState.player_plays then
+            print("You are out of cards, you lose.")
+            return
+        end
+
+        if not gameState.npc_plays then
+            print("The enemy is out of cards, you win!")
+            return
+        end
+
+        --print some info of the cards being played
+        for key, value in pairs(gameState.player_plays[1]) do
+            print(key, value)
+        end
+        for key, value in pairs(gameState.npc_plays[1]) do
+            print(key, value)
+        end 
+
+        --player wins
+        if gameState.player_plays[1].value > gameState.npc_plays[1].value then
+            table.insert(gameState.player_hand, gameState.player_plays)
+            table.insert(gameState.player_hand, gameState.npc_plays)
+
+        --npc wins
+        elseif gameState.npc_plays[1].value > gameState.player_plays[1].value then
+            table.insert(gameState.npc_hand, gameState.npc_plays)
+            table.insert(gameState.npc_hand, gameState.player_plays)
+
+        else --trigger the war function
+            war(gameState.player_hand, gameState.npc_hand)
+        end
+    end
+    inWar = false
 end
-    
---draws graphics on screen
+
+
+
 function love.draw()
-    love.graphics.draw(texture, aceHeart, 0, 0)
-    
+    --cards in players hands
+    love.graphics.print("Player's Hand: " .. #gameState.player_hand .. " cards", 50, 450)
+    love.graphics.print("NPC's Hand: " .. #gameState.npc_hand .. " cards", 50, 100)
+
+    --draw the players face-up card
+    if gameState.player_plays[1] then
+        love.graphics.draw(deckfile, quads[gameState.player_plays[1].spriteIndex], 300, 400)
+        love.graphics.print("Player plays: " .. gameState.player_plays[1].value .. " " .. gameState.player_plays[1].suit, 50, 470)
+
+    else
+        --not working yet
+        love.graphics.draw(deckfile, quads[77], 300, 400)
+    end
+
+    --draw the npcs face-up card
+    if gameState.npc_plays[1] then
+        love.graphics.draw(deckfile, quads[gameState.npc_plays[1].spriteIndex], 300, 50)
+        love.graphics.print("NPC plays: " .. gameState.npc_plays[1].value .. " " .. gameState.npc_plays[1].suit, 50, 120)
+
+
+    else
+        --not working yet
+        love.graphics.draw(deckfile, quads[77], 300, 50)
+    end
 end
 
+    --draw the war_cards (face-down cards)
+    --draw the war_face (face-up cards)
+--[[     if #gameState.war_face > 0 then
+        for i, card in ipairs(gameState.war_cards) do
+            love.graphics.draw(deckfile, quads[card[1].spriteIndex], 200, 250 + i * 20)
+        end
+    end ]]
 
---stuff to build
--- deck
--- two players -> each player's hand -> table
--- take turns putting cards in the middle to compare -> if statements
--- shuffle cards -> add some random
 
+
+--[[
+Tim's Notes: 
+1. write down the rules of war as concrete items -- e.g. "a high card beats a lower card | Aces are the highest card (not lowest) | if two cards are the same face value, Spades beats Hearts beats clubs beats diamonds | players have a hand of 12 | loser gets the other person's card" etc
+
+that helps you understand the exact logic you are shooting for, kind of like user stories in web
+
+good to do this first so you are thinking architecturally from jump
+
+2. figure out the minimum you need to display this on screen -- imo, be able to render two specific cards, and some text. this is the first code you will write, and you shoot for something concrete, like literally be able to just display two cards and "hello, world!" on the screen
+
+3. figure out your "loop." this is core to game programming more than any other kind of programming. game programming is a constant loop of user input, then effect. in this case the one user action is basically "draw". so you would have some input e.g. spacebar trigger the draw event, then:
+
+4. do your setup: draw two "hands" from a single "deck" (this will involve one "deck" array you set up manually, and two "hand" arrays for each player, a RNG, and a loop or two)
+
+5. by doing so define your "game state" (in Lua, will be a "global" table that you declare at the top and set up in the .load method)
+
+6. implement your player action "draw" where a card is drawn from the top (front or back aka) of each hand array, displayed, and compared
+
+7. show the result (text or whatever, "you won" or "you lost" in terms of info)
+
+8. mutate state (add both cards to "bottom" of loser's deck or however you want your rule to work)
+
+9. close the loop, aka go to #6
+
+10. finally handle endgame; display a message when someone wins, and optionally give the player an option to restart the game
+
+i personally find it is cleanest and easiest to fully complete each step sequentially, with a minimum of UI. then when you are happy with the feel of the loop itself you can go in and polish everything, add animation or whatever you want.
+
+    my one additional hint to you is regarding your card loader -- you are on the right track. however this might be a good place to a) measure the actual size of each card on the PNG, and b) think about using a loop
+
+ ]]
